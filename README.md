@@ -1,4 +1,4 @@
-# Season plugin
+# WIP - Season plugin
 
 Enables multi-seasonal sites.
 
