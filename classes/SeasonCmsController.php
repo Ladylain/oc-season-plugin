@@ -41,6 +41,7 @@ class SeasonCmsController extends CmsController
 
         $uri = ltrim($this->parseUris($season, $site, $url),"/");
         // Enforce prefix, if applicable
+
         //TODO: FACTORIZE THIS
         if ($redirect = $this->redirectWithoutSeasonPrefix($season, $site, $url, $uri)) {
             return $redirect;
@@ -48,9 +49,7 @@ class SeasonCmsController extends CmsController
         if ($redirect = $this->redirectWithoutPrefix($site, $url, $uri)) {
             return $redirect;
         }
-        // // Enforce prefix, if applicable
-        
-
+    
         return App::make(Controller::class)->run($uri);
     }
 
@@ -97,12 +96,11 @@ class SeasonCmsController extends CmsController
         else{
             $pageSeasonable = false;
         }
+        
         // Only a fallback site should redirect
         if (!$season || !$site || !$season->isFallbackMatch || !$pageSeasonable) {
             return null;
         }
-
-
 
         // A prefix has been found and removed already
         if ($originalUrl !== '/' && ltrim(str_replace(ltrim($site->route_prefix, '/'), '', $originalUrl), '/') !== $proposedUrl ) {
@@ -130,15 +128,37 @@ class SeasonCmsController extends CmsController
      */
     protected function determineRedirectFromPolicyExtended($originalSeason, $originalSite, $originalUrl, $pageSeasonable)
     {
-        $locales = $this->getLocalesFromBrowser((string) Request::server('HTTP_ACCEPT_LANGUAGE'));
-        
-        $url = ltrim($originalUrl, '/');
 
-        $endOfUrl = ltrim(str_replace(ltrim($originalSite->route_prefix, '/'), '', $originalUrl), '/');
-        dump('seasonable', $pageSeasonable);
-        $season = ($pageSeasonable) ? $originalSeason->getAttributeTranslated('code', $originalSite->locale).'/' : '';
+        $policy = Config::get('cms.redirect_policy', 'detect');
 
-        return trim($originalSite->route_prefix.'/'. $season .$endOfUrl, '/');
+        // Detect site from browser locale (same site)
+        if ($policy === 'detect') {
+            $site = Site::getSiteFromBrowser(
+                (string) Request::server('HTTP_ACCEPT_LANGUAGE'),
+                $originalSite->group_id
+            );
+            if($site->is_prefixed){
+                $sitePath = $site->route_prefix;
+                $siteLocale = $site->locale;
+            }
+        }
+
+        // Use primary site
+        elseif ($policy === 'primary') {
+            $sitePath = Site::getPrimarySite()?->base_url;
+            $siteLocale = Site::getPrimarySite()?->locale;
+        }
+
+        else {
+            // Use a specified site ID
+            $sitePath = Site::getSiteFromId($policy)?->base_url;
+            $siteLocale = Site::getSiteFromId($policy)?->locale;
+        };
+
+        $endOfUrl = ltrim(str_replace(ltrim($sitePath, '/'), '', $originalUrl), '/');
+        $season = ($pageSeasonable) ? $originalSeason->getAttributeTranslated('code', $siteLocale).'/' : '';
+
+        return trim($sitePath.'/'. $season .$endOfUrl, '/');
         
 
     }

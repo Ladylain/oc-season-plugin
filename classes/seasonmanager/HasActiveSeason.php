@@ -18,6 +18,10 @@ trait HasActiveSeason
 {
 
     /**
+     * @var string urlPrefix
+     */
+    protected $urlPrefix;
+    /**
      * getActiveSeason
      */
     public function getActiveSeason()
@@ -91,9 +95,23 @@ trait HasActiveSeason
         }else {
             $prefix = '/'. $season->code;
         }
+        $this->setUrlPrefix($prefix);
 
         Cms::setUrlPrefix($prefix);
         $this->setActiveSeason($season);
+    }
+
+    public function setUrlPrefix($prefix)
+    {
+        $this->urlPrefix = $prefix;
+    }
+
+    /**
+     * getUrlPrefix
+     */
+    public function getUrlPrefix()
+    {
+        return $this->urlPrefix;
     }
 }
 

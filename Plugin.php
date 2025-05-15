@@ -3,6 +3,8 @@
 use Season;
 use App;
 use Backend;
+use Cms\Classes\CmsException;
+use Cms\Classes\Controller;
 use Config;
 use Cms\Classes\ThisVariable;
 use System\Classes\PluginBase;
@@ -12,6 +14,11 @@ use Site;
 use Ladylain\Season\Classes\SeasonCmsController;
 use Ladylain\Season\Helpers\Season as HelpersSeason;
 use Cms\Classes\Page;
+use Cms\Classes\Router;
+use Cms\Classes\Theme;
+use Lang;
+use Route;
+use Url;
 
 /**
  * Plugin Information File
@@ -76,8 +83,9 @@ class Plugin extends PluginBase
                 return $page->settings['is_seasonable'] ?? false;
             });
         });
+
+        
         \Event::listen('cms.page.init', function($controller) {  
-            
             $controller->vars['this'] = new ThisVariable([
                 'controller' => $controller,
                 'page' => $controller->getPage(),
@@ -90,14 +98,13 @@ class Plugin extends PluginBase
                 'site' => fn() => Site::getActiveSite(),
                 'locale' => fn() => App::getLocale(),
                 'season' => fn() => Season::getActiveSeason(),
-    
+                
                 // @deprecated
                 'method' => fn() => Request::method(),
             ]);
             
         });
         
-
         if(App::runningInBackend()){
             \Event::listen('cms.template.extendTemplateSettingsFields', function ($extension, $dataHolder) {
                 if ($dataHolder->templateType === 'page') {
@@ -159,4 +166,99 @@ class Plugin extends PluginBase
             ],
         ];
     }
+
+    /**
+     * registerMarkupTags used by the frontend.
+     */
+    public function registerMarkupTags()
+    {
+        return [
+            'filters' => [
+                'page' => [$this, 'customPageFilter'],
+            ]
+        ];
+    }
+
+
+    public function customPageFilter($name, $parameters = [], $routePersistence = true)
+    {
+        $controller = new Controller();
+
+        if ($name instanceof ThisVariable) {
+            $name = '';
+        }
+
+        if (!$name) {
+            return $controller->currentPageUrl($parameters, $routePersistence);
+        }
+        
+        // Invalid input same as not found
+        if (!is_string($name)) {
+            return null;
+        }
+        
+        // Second parameter can act as third
+        if (is_bool($parameters)) {
+            $routePersistence = $parameters;
+        }
+        
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
+        $theme = Theme::getActiveTheme();
+        if (!$theme) {
+            throw new CmsException(Lang::get('cms::lang.theme.active.not_found'));
+        }
+        $router = new Router($theme);
+        if ($routePersistence) {
+            $parameters = array_merge($router->getParameters(), $parameters);
+        }
+        
+        if (!$url = $router->findByFile($name, $parameters)) {
+            return null;
+        }
+        // get Page Model
+        $page = $router->findByUrl($url);
+        // If the page is not found, return null
+        if(!$page) {
+            return null;
+        }
+        // If the page is not seasonable, return the url
+        if($page->isSeasonable()){
+            $season = Season::getActiveSeason();
+            if($season){
+                $url = Season::getUrlPrefix().$url;
+            }
+        }
+        // else, prefix with site route prefix
+        else{
+            $site = Site::getActiveSite();
+            if($site->is_prefixed){
+                $url = $site->route_prefix.$url;
+            }
+        }
+
+        $path = $url;
+
+        // Process path
+        if (substr($path, 0, 1) === '/') {
+            $path = substr($path, 1);
+        }
+        
+        // Use the router
+        $routeAction = 'Cms\Classes\SeasonCmsController@run';
+
+        $actionExists = Route::getRoutes()->getByAction($routeAction) !== null;
+        
+        if ($actionExists) {
+            $result = Url::action($routeAction, ['slug' => $path]);
+        }
+        else {
+            $result = $path;
+        }
+        // Use the base URL
+        return Url::toRelative($result);
+        
+    }
+    
 }
