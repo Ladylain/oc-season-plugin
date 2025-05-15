@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Season
+
+# Model Form Field configuration
+form: $/ladylain/season/models/seasondefinition/fields.yaml
+
+# Model Class name
+modelClass: Ladylain\Season\Models\SeasonDefinition
+
+# Default redirect location
+defaultRedirect: ladylain/season/seasons
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: ladylain/season/seasons/update/:id
+    redirectClose: ladylain/season/seasons
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: ladylain/season/seasons
+    redirectClose: ladylain/season/seasons
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

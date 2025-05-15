@@ -1,0 +1,9 @@
+{% if __SELF__.isPageSeasonable %}
+<div id="seasons-picker" class="pe-25 d-flex">
+    {% for season in __SELF__.seasons %}
+        <a href="{{ season.url }}" class="{{ this.season.code == season.code ? 'active' }}">
+            <i class="ph-light {{ season.icon }} px-1"></i>
+        </a>
+    {% endfor %}
+</div>
+{% endif %}

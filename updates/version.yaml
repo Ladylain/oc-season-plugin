@@ -1,0 +1,7 @@
+v1.0.1: First version of Season
+v1.0.2:
+  - Added support for multiple seasons
+  - create_seasons_table.php
+v1.0.3:
+  - Add Modelable Season trait
+  - create_modelable_season_pivot_table.php

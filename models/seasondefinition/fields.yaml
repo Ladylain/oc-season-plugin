@@ -1,0 +1,36 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    active:
+        label: Active
+        type: switch
+        span: auto
+        comment: Whether the season is active or not.
+    _ruler1:
+        type: ruler
+    name:
+        label: Name
+        type: text
+        span: row
+        spanClass: col-12 col-md-4
+        required: true
+        comment: The name of the season.
+    code:
+        label: Code
+        type: text
+        span: row
+        spanClass: col-12 col-md-4
+        required: true
+        comment: The code of the season.
+        preset:
+            type: slug
+            field: name
+    icon:
+        label: Icon
+        type: dropdown
+        optionsPreset: phosphorIcons
+        span: row
+        spanClass: col-12 col-md-4
+        comment: The icon of the season.
