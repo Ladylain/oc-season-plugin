@@ -128,37 +128,14 @@ class SeasonCmsController extends CmsController
      */
     protected function determineRedirectFromPolicyExtended($originalSeason, $originalSite, $originalUrl, $pageSeasonable)
     {
+        $locales = $this->getLocalesFromBrowser((string) Request::server('HTTP_ACCEPT_LANGUAGE'));
+        
+        $url = ltrim($originalUrl, '/');
 
-        $policy = Config::get('cms.redirect_policy', 'detect');
+        $endOfUrl = ltrim(str_replace(ltrim($originalSite->route_prefix, '/'), '', $originalUrl), '/');
+        $season = ($pageSeasonable) ? $originalSeason->getAttributeTranslated('code', $originalSite->locale).'/' : '';
 
-        // Detect site from browser locale (same site)
-        if ($policy === 'detect') {
-            $site = Site::getSiteFromBrowser(
-                (string) Request::server('HTTP_ACCEPT_LANGUAGE'),
-                $originalSite->group_id
-            );
-            if($site->is_prefixed){
-                $sitePath = $site->route_prefix;
-                $siteLocale = $site->locale;
-            }
-        }
-
-        // Use primary site
-        elseif ($policy === 'primary') {
-            $sitePath = Site::getPrimarySite()?->base_url;
-            $siteLocale = Site::getPrimarySite()?->locale;
-        }
-
-        else {
-            // Use a specified site ID
-            $sitePath = Site::getSiteFromId($policy)?->base_url;
-            $siteLocale = Site::getSiteFromId($policy)?->locale;
-        };
-
-        $endOfUrl = ltrim(str_replace(ltrim($sitePath, '/'), '', $originalUrl), '/');
-        $season = ($pageSeasonable) ? $originalSeason->getAttributeTranslated('code', $siteLocale).'/' : '';
-
-        return trim($sitePath.'/'. $season .$endOfUrl, '/');
+        return trim($originalSite->route_prefix.'/'. $season .$endOfUrl, '/');
         
 
     }
