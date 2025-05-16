@@ -18,14 +18,6 @@ use Cms\Classes\Theme;
 class SeasonCmsController extends CmsController
 {
 
-        /**
-     * __construct a new CmsController instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        
-    }
 
     public function run($url = '/'){
         // Check configuration for bypass exceptions
