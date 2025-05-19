@@ -14,18 +14,46 @@ trait SeasonableTrait
             'table' => 'ladylain_season_modelable_season',
         ];
 
-        $this->hasOneThrough['season'] = [
-            SeasonDefinition::class,
-            'key' => 'id',
-            'through' => Seasonable::class,
-            'throughKey' => 'season_id',
-            'otherKey' => 'model_id',
-            'secondOtherKey' => 'id'
+        // $this->hasOneThrough['season'] = [
+        //     SeasonDefinition::class,
+        //     'key' => 'id',
+        //     'through' => Seasonable::class,
+        //     'throughKey' => 'season_id',
+        //     'otherKey' => 'model_id',
+        //     'secondOtherKey' => 'id'
 
-        ];
+        // ];
 
     }
 
+    /**
+     * Accès direct (méthode ou accessor) à la définition de la saison.
+     */
+    public function getSeasonAttribute()
+    {
+        // Charge le pivot + sa définition en un seul appel
+        $pivot = $this->seasonable()->with('season')->first();
+        return $pivot
+            ? $pivot->definition
+            : null;
+    }
+
+    public function getSeasonIdAttribute()
+    {
+        return $this->seasonable ? $this->seasonable->season_id : null;
+    }
+
+    public function beforeSave()
+    {
+        if ($this->seasonable_id) {
+            $seasonable = $this->seasonable ?? new Seasonable();
+            $seasonable->season_id = $this->seasonable_id;
+            $seasonable->modelable_type = self::class;
+            $seasonable->modelable_id = $this->id;
+            $seasonable->save();
+        }
+        unset($this->seasonable_id);
+    }
     // /**
     //  * On renvoie **l’ID** de la 1ère Saison ou null
     //  * pour que le dropdown sache quoi sélectionner.
@@ -58,7 +86,7 @@ trait SeasonableTrait
      */
     public function getSeasonsOptions()
     {
-        return Season::orderBy('name')
+        return SeasonDefinition::orderBy('name')
                      ->pluck('name','id')
                      ->toArray();
     }

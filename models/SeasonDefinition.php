@@ -21,7 +21,7 @@ class SeasonDefinition extends Model
      * @var string table name
      */
     public $table = 'ladylain_season_seasons';
-
+    
     /**
      * @var array rules for validation
      */
@@ -29,7 +29,15 @@ class SeasonDefinition extends Model
 
     public $translatable = ['code'];
 
-        /**
+    public $hasMany = [
+        'seasonable' => [
+            'Ladylain\Season\Models\Seasonable',
+            'table' => 'ladylain_season_modelable_season',
+            'key' => 'season_id'
+        ]
+    ];
+
+    /**
      * afterSave
      */
     public function afterSave()

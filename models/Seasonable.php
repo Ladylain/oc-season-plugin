@@ -8,6 +8,9 @@ class Seasonable extends Model
 
     public $table = 'ladylain_season_modelable_season';
 
+    public $timestamps = false;
+    public $rules = [];
+
     protected $fillable = [
         'modelable_id',
         'modelable_type',
