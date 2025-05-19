@@ -14,7 +14,7 @@ class SeasonDefinition extends Model
     use \October\Rain\Database\Traits\Validation;
     
     public $implement = [
-        \RainLab\Translate\Behaviors\TranslatableModel::class
+        '@'.\RainLab\Translate\Behaviors\TranslatableModel::class
     ];
 
     /**
