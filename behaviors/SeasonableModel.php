@@ -4,7 +4,7 @@ use Db;
 use Ladylain\Season\Models\Seasonable;
 use Ladylain\Season\Models\SeasonDefinition;
 use October\Rain\Extension\ExtensionBase;
-
+use Ladylain\Season\Scopes\SeasonScope;
 /**
  * Seasonable model extension
  *
@@ -69,7 +69,11 @@ class SeasonableModel extends ExtensionBase
                 ->delete();
         });
 
+        $model::addGlobalScope(new SeasonScope);
+
     }
+
+    
 
     public function getSeasonAttribute()
     {
