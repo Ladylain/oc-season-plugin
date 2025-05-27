@@ -20,8 +20,8 @@ return new class extends Migration
         Schema::create('ladylain_season_modelable_season', function($table) {
             $table->increments('id');
             $table->integer('season_id')->unsigned()->index();
-            $table->integer('modelable_id')->unsigned();
-            $table->string('modelable_type');
+            $table->integer('modelable_id')->unsigned()->nullable();
+            $table->string('modelable_type')->nullable();
             $table->timestamps();
         });
     }

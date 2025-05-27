@@ -17,6 +17,8 @@ use Cms\Classes\Page;
 use Cms\Classes\Router;
 use Cms\Classes\Theme;
 use Lang;
+use Media\Classes\MediaLibrary;
+use October\Rain\Database\Relations\Relation;
 use Route;
 use Url;
 
@@ -47,6 +49,7 @@ class Plugin extends PluginBase
     {
         $this->registerSingletons();
         $this->registerFacades();
+        
     }
 
 
@@ -70,6 +73,10 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
+        Relation::morphMap([
+            'page' => \LucasPalomba\PageTree\Models\Page::class,
+        ]);
+        
         //$this->extendGlobalMiddlewares();
 
         Event::listen('cms.route', function () {
@@ -115,6 +122,19 @@ class Plugin extends PluginBase
                             'type' => 'checkbox',
                             'tab' => 'Saisons',
                         ];
+                }
+            });
+
+            \Event::listen('backend.page.beforeDisplay', function ($controller, $action, $params) {
+                $site = Site::getEditSite();
+                if($site->id == 1) {
+                    // Si on est dans le backend, on utilise le dossier media par défaut
+                    Config::set('filesystems.disks.media.root', storage_path('app/media'));
+                    MediaLibrary::instance()->resetCache();
+                } else {
+                    // Sinon, on utilise le dossier media du site actif
+                    Config::set('filesystems.disks.media.root', storage_path('app/media/uploaded-files'));
+                    MediaLibrary::instance()->resetCache();
                 }
             });
         }
