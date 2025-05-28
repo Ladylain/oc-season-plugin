@@ -90,26 +90,8 @@ class Plugin extends PluginBase
                 return $page->settings['is_seasonable'] ?? false;
             });
         });
-
-        
         \Event::listen('cms.page.init', function($controller) {  
-            $controller->vars['this'] = new ThisVariable([
-                'controller' => $controller,
-                'page' => $controller->getPage(),
-                'layout' => $controller->getLayout(),
-                'theme' => $controller->getTheme(),
-                'param' => $controller->getRouter()->getParameters(),
-                'environment' => fn() => App::environment(),
-                'request' => fn() => App::make('request'),
-                'session' => fn() => App::make('session')->driver(),
-                'site' => fn() => Site::getActiveSite(),
-                'locale' => fn() => App::getLocale(),
-                'season' => fn() => Season::getActiveSeason(),
-                
-                // @deprecated
-                'method' => fn() => Request::method(),
-            ]);
-            
+            $controller->vars['this']->config['season'] = fn() => Season::getActiveSeason();
         });
         
         if(App::runningInBackend()){

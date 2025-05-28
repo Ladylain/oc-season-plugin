@@ -1,5 +1,6 @@
 <?php namespace Ladylain\Season\Behaviors;
 
+use App;
 use Db;
 use Ladylain\Season\Models\Seasonable;
 use Ladylain\Season\Models\SeasonDefinition;
@@ -68,8 +69,10 @@ class SeasonableModel extends ExtensionBase
                 ->where('model_type', get_class($model))
                 ->delete();
         });
+        if( !App::runningInBackend()){
 
-        $model::addGlobalScope(new SeasonScope);
+            $model::addGlobalScope(new SeasonScope);
+        }
 
     }
 
