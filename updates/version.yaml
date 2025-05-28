@@ -6,3 +6,6 @@ v1.0.2:
 v1.0.3:
   - Add Modelable Season trait
   - create_modelable_season_pivot_table.php
+v1.0.4:
+  - update seasonable_id field to be nullable
+  - migration_1_0_4.php
