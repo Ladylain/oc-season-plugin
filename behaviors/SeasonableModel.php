@@ -57,6 +57,9 @@ class SeasonableModel extends ExtensionBase
                 $seasonable->save();
                 // Utilisation du Deferred Binding pour différer la liaison
                 $model->seasonable()->add($seasonable, post('_session_key', null, true));
+            }elseif($model->seasonable_id == ''){
+                // If seasonable_id is empty, we delete the existing relation
+                $model->seasonable()->delete();
             }
         
             unset($model->seasonable_id);
@@ -100,7 +103,9 @@ class SeasonableModel extends ExtensionBase
      */
     public function getSeasonsOptions()
     {
-        return SeasonDefinition::orderBy('name')
+        return [
+            '' => 'aucune saison',
+         ] + SeasonDefinition::orderBy('name')
                      ->pluck('name','id')
                      ->toArray();
     }

@@ -14,6 +14,8 @@ use Illuminate\Routing\Controller as ControllerBase;
 use Closure;
 use Cms\Classes\Router;
 use Cms\Classes\Theme;
+use Event;
+use Ladylain\Season\Models\Seasonable;
 
 class SeasonCmsController extends CmsController
 {
@@ -81,12 +83,15 @@ class SeasonCmsController extends CmsController
     {
         $theme = Theme::getActiveTheme();
         $router = new Router($theme);
+        $pageSeasonable = false;
         if($router->findByUrl($proposedUrl)){
-
-            $pageSeasonable = $router->findByUrl($proposedUrl)->settings['is_seasonable'] ?? false;
-        }
-        else{
-            $pageSeasonable = false;
+            foreach ($this->listAllSeasonableModels() as $model) {
+                //on verifie si un model possede le slug identique a $proposedUrl
+                if ($model->slug == $proposedUrl) {
+                    $pageSeasonable = true;
+                    break; 
+                }
+            }
         }
         
         // Only a fallback site should redirect
@@ -164,4 +169,18 @@ class SeasonCmsController extends CmsController
         return $result;
     }
     
+    protected function listAllSeasonableModels()
+    {
+        $models = [];
+        $seasonableModels = Seasonable::all();
+        foreach ($seasonableModels as $seasonableModel) {
+            $model = $seasonableModel->modelable;
+            if ($model) {
+                $models[] = $model;
+            }
+        }
+        return $models; // Return unique models by class name
+        // on 
+    }
+
 }

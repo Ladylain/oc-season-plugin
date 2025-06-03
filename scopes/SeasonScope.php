@@ -1,5 +1,6 @@
 <?php namespace Ladylain\Season\Scopes;
 
+use Event;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -15,6 +16,10 @@ class SeasonScope implements Scope
         $activeSeason = Season::getActiveSeason();
 
         if ($activeSeason) {
+            if (!$model->seasonable){
+                // If the model does not have a seasonable relation, we can skip the scope
+                return;
+            }
             $builder->whereHas('seasonable', function ($query) use ($activeSeason) {
                 $query->where('season_id', $activeSeason->id);
             });

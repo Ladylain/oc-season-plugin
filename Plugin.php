@@ -107,18 +107,18 @@ class Plugin extends PluginBase
                 }
             });
 
-            \Event::listen('backend.page.beforeDisplay', function ($controller, $action, $params) {
-                $site = Site::getEditSite();
-                if($site->id == 1) {
-                    // Si on est dans le backend, on utilise le dossier media par défaut
-                    Config::set('filesystems.disks.media.root', storage_path('app/media'));
-                    MediaLibrary::instance()->resetCache();
-                } else {
-                    // Sinon, on utilise le dossier media du site actif
-                    Config::set('filesystems.disks.media.root', storage_path('app/media/uploaded-files'));
-                    MediaLibrary::instance()->resetCache();
-                }
-            });
+            // \Event::listen('backend.page.beforeDisplay', function ($controller, $action, $params) {
+            //     $site = Site::getEditSite();
+            //     if($site->id == 1) {
+            //         // Si on est dans le backend, on utilise le dossier media par défaut
+            //         Config::set('filesystems.disks.media.root', storage_path('app/media'));
+            //         MediaLibrary::instance()->resetCache();
+            //     } else {
+            //         // Sinon, on utilise le dossier media du site actif
+            //         Config::set('filesystems.disks.media.root', storage_path('app/media/uploaded-files'));
+            //         MediaLibrary::instance()->resetCache();
+            //     }
+            // });
         }
 
     
