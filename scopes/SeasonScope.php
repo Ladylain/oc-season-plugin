@@ -15,15 +15,12 @@ class SeasonScope implements Scope
     {
         $activeSeason = Season::getActiveSeason();
 
-        if ($activeSeason) {
-            if (!$model->seasonable){
-                // If the model does not have a seasonable relation, we can skip the scope
-                return;
-            }
-            $builder->whereHas('seasonable', function ($query) use ($activeSeason) {
-                $query->where('season_id', $activeSeason->id);
-            });
-        }
+
+        $builder->where(function ($query) use ($activeSeason) {
+            $query->whereHas('seasonable', function ($q) use ($activeSeason) {
+                $q->where('season_id', $activeSeason->id);
+            })->orWhereDoesntHave('seasonable');
+        });
     }
 
     /**
