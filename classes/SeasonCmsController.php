@@ -14,8 +14,10 @@ use Illuminate\Routing\Controller as ControllerBase;
 use Closure;
 use Cms\Classes\Router;
 use Cms\Classes\Theme;
+use Cookie;
 use Event;
 use Ladylain\Season\Models\Seasonable;
+use Session;
 
 class SeasonCmsController extends CmsController
 {
@@ -116,7 +118,7 @@ class SeasonCmsController extends CmsController
             $redirectUrl .= '?'.$queryString;
         }
         // No prefix detected, attach one with redirect
-        return Redirect::to($redirectUrl, 301);
+        return Redirect::to($redirectUrl, 302);
     }
 
 

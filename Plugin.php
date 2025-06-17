@@ -177,6 +177,7 @@ class Plugin extends PluginBase
         return [
             'filters' => [
                 'page' => [$this, 'customPageFilter'],
+                //TODO: Override link filter also
             ]
         ];
     }
