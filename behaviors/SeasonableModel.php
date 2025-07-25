@@ -36,6 +36,7 @@ class SeasonableModel extends ExtensionBase
             Seasonable::class,
             'name'  => 'modelable',
             'table' => 'ladylain_season_modelable_season',
+            'replicate' => false
         ];
 
         $model->hasOneThrough['season'] = [
@@ -45,6 +46,7 @@ class SeasonableModel extends ExtensionBase
             'key' => 'season_id',
             'modelKey' => 'seasonable_id',
             'modelType' => get_class($model),
+            'replicate' => false
             
         ];
 

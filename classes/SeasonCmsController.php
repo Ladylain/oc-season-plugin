@@ -70,7 +70,6 @@ class SeasonCmsController extends CmsController
      */
     protected function parseUris($season, $site, string $url): string
     {
-
         $url = $site ? $site->removeRoutePrefix($url) : $url;
 
         $url = $season ? $season->removeRoutePrefix($url) : $url;

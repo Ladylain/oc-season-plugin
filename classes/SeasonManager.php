@@ -8,6 +8,7 @@ use Exception;
 use Cms\Classes\Page;
 use Ladylain\Season\Models\SeasonDefinition;
 use Ladylain\Season\Classes\SeasonCollection;
+use Ladylain\Season\Models\Seasonable;
 use Session;
 use October\Rain\Router\Router as RainRouter;
 use System\Classes\PluginManager;
@@ -275,4 +276,18 @@ class SeasonManager
         Manifest::forget(self::MANIFEST_SEASONS);
     }
 
+
+    static public function listAllSeasonableModelsID()
+    {
+        $models = [];
+        $seasonableModels = Seasonable::all();
+        foreach ($seasonableModels as $seasonableModel) {
+            $model = $seasonableModel->modelable;
+            if ($model) {
+                $models[] = $model->id;
+            }
+        }
+        return $models; // Return unique models by class name
+        // on 
+    }
 }

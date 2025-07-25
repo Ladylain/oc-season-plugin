@@ -82,22 +82,52 @@ class SeasonDefinition extends Model
 
             /**
      * removeRoutePrefix removes the route prefix from a uri,
-     * for example en/blog → blog
+     * for example en/blog → blog or https://domain.com/en/blog → https://domain.com/blog
      */
     public function removeRoutePrefix(string $url): string
     {
+        
         if (!$this->code) {
             return $url;
         }
 
-        $url = ltrim($url, '/');
-        $prefix = ltrim($this->code, '/');
-
-        if (substr($url, 0, strlen($prefix)) === $prefix) {
-            $url = substr($url, strlen($prefix));
+        // Parse URL to handle both relative and absolute URLs
+        $parsedUrl = parse_url($url);
+        $path = $parsedUrl['path'] ?? '';
+        
+        // Split path into segments
+        $segments = explode('/', trim($path, '/'));
+        $seasonCode = trim($this->code, '/');
+        
+        // Find and remove the season segment
+        $filteredSegments = [];
+        foreach ($segments as $segment) {
+            if ($segment !== $seasonCode) {
+                $filteredSegments[] = $segment;
+            }
         }
-
-        return $url;
+        
+        // Rebuild the path
+        $path = implode('/', $filteredSegments);
+        
+        // If it's an absolute URL, reconstruct it
+        if (isset($parsedUrl['scheme']) && isset($parsedUrl['host'])) {
+            $result = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+            if (isset($parsedUrl['port'])) {
+                $result .= ':' . $parsedUrl['port'];
+            }
+            $result .= '/' . ltrim($path, '/');
+            if (isset($parsedUrl['query'])) {
+                $result .= '?' . $parsedUrl['query'];
+            }
+            if (isset($parsedUrl['fragment'])) {
+                $result .= '#' . $parsedUrl['fragment'];
+            }
+            return $result;
+        }
+        
+        // For relative URLs, just return the path
+        return $path;
     }
 
     /**
