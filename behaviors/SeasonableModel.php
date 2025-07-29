@@ -67,13 +67,13 @@ class SeasonableModel extends ExtensionBase
             unset($model->seasonable_id);
         });
 
-        // Clean up indexes when this model is deleted
-        $model->bindEvent('model.afterDelete', function() use ($model) {
-            Db::table('ladylain_season_modelable_season')
-                ->where('model_id', $model->getKey())
-                ->where('model_type', get_class($model))
-                ->delete();
-        });
+        // // Clean up indexes when this model is deleted
+        // $model->bindEvent('model.afterDelete', function() use ($model) {
+        //     Db::table('ladylain_season_modelable_season')
+        //         ->where('model_id', $model->getKey())
+        //         ->where('model_type', get_class($model))
+        //         ->delete();
+        // });
         if( !App::runningInBackend()){
 
             $model::addGlobalScope(new SeasonScope);
