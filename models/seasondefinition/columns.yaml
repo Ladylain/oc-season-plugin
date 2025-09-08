@@ -23,6 +23,6 @@ columns:
         optionsMethod: getStatusCodeOptions
     is_primary:
         label: Primary
-        type: boolean
+        type: switch
         searchable: true
         sortable: false
