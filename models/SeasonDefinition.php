@@ -42,6 +42,11 @@ class SeasonDefinition extends Model
      */
     public function afterSave()
     {
+        if( $this->is_primary)
+        {
+            // on désactive les autres
+            self::where('id', '<>', $this->id)->update(['is_primary' => false]);
+        }
         Season::resetCache();
     }
 
