@@ -87,12 +87,9 @@ class SeasonManager
         
         // Found a root host match without any valid prefix
         if ($rootSeasons->count() > 0 && $seasons->count() === 0 && !$cookieSeason ){
-            $seasons = $rootSeasons->each(function($season) {
-                $season->isFallbackMatch = true;
-            });
+            $seasons = $this->listEnabled()->isPrimary();
         }
-
-        return $seasons->isPrimary()->first();
+        return $seasons->first();
     }
     /**
      * getSeasonFromId
