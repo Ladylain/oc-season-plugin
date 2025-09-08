@@ -92,7 +92,7 @@ class SeasonManager
             });
         }
 
-        return $seasons->first();
+        return $seasons->isPrimary()->first();
     }
     /**
      * getSeasonFromId
