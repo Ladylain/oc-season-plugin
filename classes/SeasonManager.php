@@ -141,7 +141,7 @@ class SeasonManager
      */
     public function getPrimarySeason()
     {
-        return $this->listSeasons()->first();
+        return $this->listSeasons()->isPrimary()->first();
     }
 
     /**

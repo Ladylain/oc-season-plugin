@@ -8,6 +8,11 @@ fields:
         type: switch
         span: auto
         comment: Whether the season is active or not.
+    is_primary:
+        label: Is Primary
+        type: switch
+        span: auto
+        comment: Whether the season is the primary season.
     _ruler1:
         type: ruler
     name:

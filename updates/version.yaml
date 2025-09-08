@@ -11,3 +11,6 @@ v1.0.4:
   - migration_1_0_4.php
 v1.0.5:
   - Fix Navigation behaviors
+v1.0.6:
+  - Add is_primary field to seasons
+  - migration_1_0_6.php
