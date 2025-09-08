@@ -38,7 +38,7 @@ class Seasons extends Controller
     {
         parent::__construct();
         BackendMenu::setContext('October.System', 'system', 'settings');
-        SettingsManager::setContext('La.Season', 'seasons');
+        SettingsManager::setContext('Ladylain.Season', 'seasons');
 
     }
 }
