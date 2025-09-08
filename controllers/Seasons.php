@@ -29,7 +29,7 @@ class Seasons extends Controller
     /**
      * @var array required permissions
      */
-    public $requiredPermissions = ['ladylain.season.seasons'];
+    //public $requiredPermissions = ['ladylain.season.seasons'];
 
     /**
      * __construct the controller
