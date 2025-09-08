@@ -21,3 +21,8 @@ columns:
         type: selectable
         sortable: false
         optionsMethod: getStatusCodeOptions
+    is_primary:
+        label: Primary
+        type: boolean
+        searchable: true
+        sortable: false
