@@ -163,7 +163,6 @@ class Plugin extends PluginBase
                 'description' => 'Gérer les saisons disponibles pour cette application.',
                 'category' => 'CATEGORY_SYSTEM',
                 'icon' => 'icon-leaf',
-                'permissions' => ['ladylain.season.*'],
                 'order' => 500,
             ],
         ];
