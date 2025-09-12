@@ -1,0 +1,6 @@
+<select name="locale-picker"
+    class="locales-picker text-primary-color" onchange="window.location.assign(this.value)">
+    {% for site in __SELF__.sites %}
+        <option value="{{ site.url }}" {{ this.site.code == site.code ? 'selected' }}>{{ site.locale }}</option>
+    {% endfor %}
+</select>

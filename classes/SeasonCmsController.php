@@ -34,10 +34,8 @@ class SeasonCmsController extends CmsController
         // Locate season
         $season = $this->findSeason(Request::root(), $url, $site);
         // Remove prefixes, if applicable
-
         $uri = ltrim($this->parseUris($season, $site, $url),"/");
         // Enforce prefix, if applicable
-
         //TODO: FACTORIZE THIS
         if ($redirect = $this->redirectWithoutSeasonPrefix($season, $site, $url, $uri)) {
             return $redirect;
@@ -71,7 +69,6 @@ class SeasonCmsController extends CmsController
     protected function parseUris($season, $site, string $url): string
     {
         $url = $site ? $site->removeRoutePrefix($url) : $url;
-
         $url = $season ? $season->removeRoutePrefix($url) : $url;
 
         return $url;

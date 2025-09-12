@@ -16,10 +16,12 @@ use Ladylain\Season\Helpers\Season as HelpersSeason;
 use Cms\Classes\Page;
 use Cms\Classes\Router;
 use Cms\Classes\Theme;
+use Ladylain\Season\Models\SeasonDefinition;
 use Lang;
 use Media\Classes\MediaLibrary;
 use October\Rain\Database\Relations\Relation;
 use Route;
+use System\Models\SiteDefinition;
 use Url;
 
 /**
@@ -140,6 +142,7 @@ class Plugin extends PluginBase
     {
         return [
             'Ladylain\Season\Components\SeasonPicker' => 'seasonPicker',
+            'Ladylain\Season\Components\SeasonLocalePicker' => 'seasonLocalePicker',
         ];
     }
 
@@ -262,5 +265,7 @@ class Plugin extends PluginBase
         return Url::toRelative($result);
         
     }
+ 
     
+
 }
