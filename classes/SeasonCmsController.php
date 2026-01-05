@@ -170,15 +170,14 @@ class SeasonCmsController extends CmsController
     protected function listAllSeasonableModels()
     {
         $models = [];
-        $seasonableModels = Seasonable::all();
+        $seasonableModels = Seasonable::with('modelable')->get();
         foreach ($seasonableModels as $seasonableModel) {
             $model = $seasonableModel->modelable;
             if ($model) {
                 $models[] = $model;
             }
         }
-        return $models; // Return unique models by class name
-        // on 
+        return $models; 
     }
 
 }

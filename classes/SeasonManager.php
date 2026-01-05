@@ -151,24 +151,13 @@ class SeasonManager
             return $this->seasons;
         }
         
-        if (Manifest::has(self::MANIFEST_SEASONS)) {
-            $this->seasons = $this->listSeasonsFromManifest(
-                (array) Manifest::get(self::MANIFEST_SEASONS)
-            );
+        try {
+            $this->seasons = SeasonDefinition::get();
         }
-        else {
-            try {
-                $this->seasons = SeasonDefinition::get();
-            }
-            catch (Exception $ex) {
-                return new SeasonCollection([SeasonDefinition::makeFallbackInstance()]);
-            }
-            
-            Manifest::put(
-                self::MANIFEST_SEASONS,
-                $this->listSeasonsForManifest($this->seasons)
-            );
+        catch (Exception $ex) {
+            return new SeasonCollection([SeasonDefinition::makeFallbackInstance()]);
         }
+        
         
         return $this->seasons;
     }
