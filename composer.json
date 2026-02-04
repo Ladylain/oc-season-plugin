@@ -1,5 +1,5 @@
 {
-    "name": "ladylain/oc-season-plugin",
+    "name": "ladylain/season-plugin",
     "type": "october-plugin",
     "description": "A plugin for managing seasons in a site",
     "require": {
