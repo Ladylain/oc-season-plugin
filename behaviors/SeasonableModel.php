@@ -52,9 +52,9 @@ class SeasonableModel extends ExtensionBase
 
         // save the seasonable relation before saving the model
         $model->bindEvent('model.beforeSave', function () use ($model) {
-            if ($model->seasonable_id || $model->seasonable) {
+            if ($model->seasonable_id) {
                 $seasonable = $model->seasonable ?? new Seasonable();
-                $seasonable->season_id = $model->seasonable_id ?? $model->seasonable->season_id;
+                $seasonable->season_id = $model->seasonable_id;
                 $seasonable->modelable_type = get_class($model);
                 $seasonable->save();
                 // Utilisation du Deferred Binding pour différer la liaison
