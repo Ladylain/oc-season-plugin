@@ -168,8 +168,9 @@ class SeasonManager
      */
     protected  function getPatternFromPage(Page $page, SeasonDefinition $saison): string
     {
-        $pattern = $page->url;
-
+        // $pattern = $page->url;
+        $pattern = $page->getTranslatableUrl(Site::getActiveSite()) ?: $page->url;
+ 
         return $pattern;
     }
 
